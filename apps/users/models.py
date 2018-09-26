@@ -24,12 +24,12 @@ class UserProfile(AbstractUser):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
-class VerifyCode(models.Model):
+class MobileVerifyRecord(models.Model):
     """
-    验证码
+    手机验证
     """
     code = models.CharField("验证码", max_length=10)
     mobile = models.CharField("电话", max_length=11)
@@ -37,6 +37,28 @@ class VerifyCode(models.Model):
 
     class Meta:
         verbose_name = "短信验证"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.code
+
+
+class EmailVerifyRecord(models.Model):
+    """
+    邮箱验证
+    """
+    send_choices = (
+        ("register", "注册"),
+        ("forget", "找回密码")
+    )
+
+    code = models.CharField("验证码", max_length=20)
+    email = models.EmailField("邮箱", max_length=50)
+    send_type = models.CharField("发送类型", choices=send_choices, max_length=10)
+    send_time = models.DateTimeField("发送时间", default=datetime.now)
+
+    class Meta:
+        verbose_name = '邮箱验证'
         verbose_name_plural = verbose_name
 
     def __str__(self):
